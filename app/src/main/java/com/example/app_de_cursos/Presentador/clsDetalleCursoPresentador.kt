@@ -3,9 +3,6 @@ package com.example.app_de_cursos.Presentador
 import com.example.app_de_cursos.Modelo.clsCursosModelo
 import com.example.app_de_cursos.Modelo.dataDetalleCurso
 import com.example.app_de_cursos.Vista.DetalleCursoActivity
-import com.example.prueba_cursos.Modelo.clsCursosModelo
-import com.example.prueba_cursos.Modelo.dataDetalleCurso
-import com.example.prueba_cursos.Vista.DetalleCursoActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
