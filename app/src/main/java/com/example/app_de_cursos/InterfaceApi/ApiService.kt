@@ -3,6 +3,7 @@ package com.example.app_de_cursos.InterfaceApi
 import com.example.app_de_cursos.Modelo.dataCarreras
 import com.example.app_de_cursos.Modelo.dataDetalleCurso
 import com.example.app_de_cursos.Modelo.dataCursos
+import com.example.app_de_cursos.Modelo.dataDetalleCurso
 import com.example.app_de_cursos.Modelo.dataEstadoInscripciones
 import com.example.app_de_cursos.Modelo.dataRegistroRequest
 import com.example.app_de_cursos.Modelo.dataRespuestaRegistro
