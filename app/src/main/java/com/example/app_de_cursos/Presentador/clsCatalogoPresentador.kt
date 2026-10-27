@@ -24,7 +24,7 @@ class clsCatalogoPresentador(val vista: MainActivity) {
             try {
                 // 1. Cargar la lista de carreras en el Spinner
                 listaCarreras = modeloCarreras.obtenerCarreras()
-                vista.mostrarCarreras(listaCarreras)
+                vista.mostrarCarr1(listaCarreras)
 
                 // 2. Cargar TODOS los cursos por defecto (carrera_id = 0)
                 cargarCursos(0)
