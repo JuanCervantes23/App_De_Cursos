@@ -1,7 +1,7 @@
 package com.example.app_de_cursos.InterfaceApi
 
 import com.example.app_de_cursos.Modelo.dataCarreras
-import com.example.app_de_cursos.Modelo.dataCursoDetalle
+import com.example.app_de_cursos.Modelo.dataDetalleCurso
 import com.example.app_de_cursos.Modelo.dataCursos
 import com.example.app_de_cursos.Modelo.dataEstadoInscripciones
 import com.example.app_de_cursos.Modelo.dataRegistroRequest
@@ -25,7 +25,7 @@ interface ApiService {
     // Vista detalle
     // Responsable:David
     @GET("obtener_detalle_curso.php")
-    suspend fun obtenerDetalleCurso(@Query("curso_id") cursoId: Int): dataCursoDetalle
+    suspend fun obtenerDetalleCurso(@Query("curso_id") cursoId: Int): dataDetalleCurso
 
     // Registro al curso
     // Responsable:Juan Francisco
