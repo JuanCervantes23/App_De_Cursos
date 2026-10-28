@@ -2,7 +2,7 @@ package com.example.app_de_cursos.Modelo
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-//re
+
 @Serializable
 data class dataDetalleCurso(
     @SerialName("id") val id: Int = 0,
