@@ -10,7 +10,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.example.app_de_cursos.Modelo.RetrofitCliente
+import com.example.app_de_cursos.Modelo.dataDetalleCurso
 import com.example.app_de_cursos.Presentador.clsDetalleCursoPresentador
+import com.example.app_de_cursos.R
 
 class DetalleCursoActivity : AppCompatActivity() {
     private lateinit var presenter: clsDetalleCursoPresentador
@@ -63,8 +66,13 @@ class DetalleCursoActivity : AppCompatActivity() {
         txtCodigo.text = "Código: " + curso.codigo
         txtDescripcion.text = curso.descripcion
         txtEspacio.text = curso.edificio + ", Salón " + curso.salon
+        txtHoras.text = curso.totalHoras.toString() + " Horas"
+        txtDias.text = curso.diasAtencion + "\n(" + curso.horario + ")"
 
         Glide.with(this)
+            .load(RetrofitCliente.BASE_URL + curso.urlImagenDetalle)
+            .placeholder(android.R.drawable.ic_menu_gallery)
+            .error(android.R.drawable.stat_notify_error)
             .into(imgDetalle)
     }
 
