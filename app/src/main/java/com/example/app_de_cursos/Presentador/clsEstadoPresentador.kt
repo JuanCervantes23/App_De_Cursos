@@ -1,35 +1,49 @@
 package com.example.app_de_cursos.Presentador
 
+import com.example.app_de_cursos.Modelo.clsCarrerasModelo
 import com.example.app_de_cursos.Modelo.clsEstadoModelo
+import com.example.app_de_cursos.Modelo.dataCarreras
 import com.example.app_de_cursos.Vista.EstadoInscripcionesActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class clsEstadoPresentador(private val vista: EstadoInscripcionesActivity) {
+class clsEstadoPresentador(val vista: EstadoInscripcionesActivity) {
+    private val modeloCarreras = clsCarrerasModelo()
+    private val modeloEstado = clsEstadoModelo()
+    private var listaCarreras: List<dataCarreras> = emptyList()
 
-    private val modelo = clsEstadoModelo()
-
-    fun cargarEstadoInscripciones(carreraId: Int) {
-        // Validación antes de llamar a la API
-        if (carreraId <= 0) {
-            vista.mostrarError("Carrera no válida para filtrar")
-            return
-        }
-
-        vista.mostrarCargando(true)
+    fun iniciar() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
-                // Retrofit maneja la red internamente, por lo que es seguro llamarlo desde Main
-                val respuesta = modelo.obtenerEstado(carreraId)
+                // Cargar la lista de carreras en el Spinner
+                listaCarreras = modeloCarreras.obtenerCarreras()
+                vista.mostrarCarreras(listaCarreras)
 
-                // Pasamos los datos a la Vista (Activity)
-                vista.mostrarDatos(respuesta.totalInscritos, respuesta.cursos)
+                // Cargar TODOS los estados por defecto
+                cargarEstadoInscripciones(0)
 
             } catch (e: Exception) {
-                vista.mostrarError("Error de conexión: " + (e.localizedMessage ?: "Error desconocido"))
-            } finally {
-                vista.mostrarCargando(false)
+                vista.mostrarError("Error: " + e.localizedMessage)
+            }
+        }
+    }
+
+    fun seleccionarCarrera(posicion: Int) {
+        if (posicion >= 0 && posicion < listaCarreras.size) {
+            val carrera = listaCarreras[posicion]
+            cargarEstadoInscripciones(carrera.id)
+        }
+    }
+
+    private fun cargarEstadoInscripciones(carreraId: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val respuesta = modeloEstado.obtenerEstado(carreraId)
+                // Usamos respuesta.total tal como viene en el PHP
+                vista.mostrarDatosEstado(respuesta.total, respuesta.cursos)
+            } catch (e: Exception) {
+                vista.mostrarError("Error al cargar estado: " + e.localizedMessage)
             }
         }
     }
