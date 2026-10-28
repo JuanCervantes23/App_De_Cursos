@@ -8,10 +8,10 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.example.app_de_cursos.Adaptador.EstadoAdaptador
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.app_de_cursos.Adaptadores.EstadoAdaptador
 import com.example.app_de_cursos.Modelo.dataCarreras
 import com.example.app_de_cursos.Modelo.dataEstadoCurso
 import com.example.app_de_cursos.Presentador.clsEstadoPresentador
