@@ -2,6 +2,7 @@ package com.example.app_de_cursos.Vista
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -32,7 +33,7 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var btnAtras: TextView
 
     private var cursoId = 0
-    private var fechaApi = "" // Formato yyyy-MM-dd, el que espera la API
+    private var fechaApi = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,7 @@ class RegistroActivity : AppCompatActivity() {
         }
         WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = false
 
-        // 1. Componentes de XML
+        //Componentes de XML
         txtCurso = findViewById(R.id.txtCursoRegistro)
         imgCurso = findViewById(R.id.imgCursoRegistro)
         etMatricula = findViewById(R.id.etMatricula)
@@ -55,7 +56,7 @@ class RegistroActivity : AppCompatActivity() {
         btnCancelar = findViewById(R.id.btnCancelar)
         btnAtras = findViewById(R.id.btnAtras)
 
-        // 2. Datos enviados desde MainActivity
+        //Datos enviados desde MainActivity
         cursoId = intent.getIntExtra("CURSO_ID", 0)
         txtCurso.text = (intent.getStringExtra("NOMBRE_CURSO") ?: "").uppercase()
         val urlImagen = intent.getStringExtra("URL_IMAGEN") ?: ""
@@ -65,14 +66,28 @@ class RegistroActivity : AppCompatActivity() {
             .error(android.R.drawable.stat_notify_error)
             .into(imgCurso)
 
-        // 3. Presentador
+        //Presentador
         presenter = clsRegistroPresentador(this)
 
-        // 4. Fecha: por defecto hoy, y al tocar el campo se abre el calendario
         establecerFecha(Calendar.getInstance())
         etFecha.setOnClickListener { mostrarCalendario() }
 
-        // 5. Botones
+        //Buscar matrícula al presionar la tecla del teclado o al salir del campo
+        etMatricula.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                presenter.buscarAlumno(etMatricula.text.toString().trim(), true)
+                true
+            } else {
+                false
+            }
+        }
+        etMatricula.setOnFocusChangeListener { _, tieneFoco ->
+            if (!tieneFoco) {
+                presenter.buscarAlumno(etMatricula.text.toString().trim(), false)
+            }
+        }
+
+        //Botones
         btnConfirmar.setOnClickListener {
             presenter.registrar(
                 cursoId,
@@ -104,7 +119,24 @@ class RegistroActivity : AppCompatActivity() {
         ).show()
     }
 
-    // Evita dobles toques mientras se envía el registro
+    //Se llama al presentador cuando la matrícula ya existe en la base de datos
+    fun mostrarAlumnoEncontrado(correo: String, fechaRegistroApi: String) {
+        etCorreo.setText(correo)
+
+        if (fechaRegistroApi.isNotEmpty()) {
+            try {
+                val fecha = SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(fechaRegistroApi)
+                if (fecha != null) {
+                    val cal = Calendar.getInstance()
+                    cal.time = fecha
+                    establecerFecha(cal)
+                }
+            } catch (e: Exception) {
+            }
+        }
+        Toast.makeText(this, "Alumno encontrado", Toast.LENGTH_SHORT).show()
+    }
+
     fun mostrarCargando(cargando: Boolean) {
         btnConfirmar.isEnabled = !cargando
         btnConfirmar.text = if (cargando) "ENVIANDO" else "CONFIRMAR INSCRIPCIÓN"
@@ -113,6 +145,10 @@ class RegistroActivity : AppCompatActivity() {
     fun registroExitoso(mensaje: String) {
         Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
         finish()
+    }
+
+    fun mostrarMensaje(mensaje: String) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
     }
 
     fun mostrarError(mensaje: String) {

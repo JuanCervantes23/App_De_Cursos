@@ -10,8 +10,32 @@ import kotlinx.coroutines.launch
 class clsRegistroPresentador(private val vista: RegistroActivity) {
     private val modelo = clsRegistroModelo()
 
+    // Se llama al presionar la tecla del teclado (o al salir del campo matrícula)
+    fun buscarAlumno(matricula: String, mostrarAvisos: Boolean) {
+        if (!Regex("^[0-9]{5,15}$").matches(matricula)) {
+            if (mostrarAvisos) {
+                vista.mostrarError("Escribe una matrícula válida para buscar")
+            }
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+            try {
+                val alumno = modelo.buscarAlumno(matricula)
+                if (alumno.existe) {
+                    vista.mostrarAlumnoEncontrado(alumno.correoInstitucional, alumno.fechaRegistro)
+                } else if (mostrarAvisos) {
+                    vista.mostrarMensaje("Matrícula nueva: captura el correo institucional")
+                }
+            } catch (e: Exception) {
+                if (mostrarAvisos) {
+                    vista.mostrarError("Error de conexión: " + (e.localizedMessage ?: "Error desconocido"))
+                }
+            }
+        }
+    }
+
     fun registrar(cursoId: Int, matricula: String, fechaApi: String, correo: String) {
-        // Validaciones antes de llamar a la API (la API vuelve a validar)
         if (cursoId <= 0) {
             vista.mostrarError("No se pudo identificar el curso")
             return

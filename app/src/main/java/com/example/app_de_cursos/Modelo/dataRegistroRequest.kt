@@ -9,4 +9,5 @@ data class dataRegistroRequest(
     @SerialName("matricula") val matricula: String = "",
     @SerialName("fecha_registro") val fechaRegistro: String = "",
     @SerialName("correo_institucional") val correoInstitucional: String = ""
+
 )

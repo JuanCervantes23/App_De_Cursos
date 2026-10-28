@@ -15,4 +15,9 @@ class clsRegistroModelo {
         )
         return RetrofitCliente.apiService.registrarInscripcion(request)
     }
+
+    //funcion para buscar la matricula
+    suspend fun buscarAlumno(matricula: String): dataAlumno {
+        return RetrofitCliente.apiService.buscarAlumno(matricula)
+    }
 }
