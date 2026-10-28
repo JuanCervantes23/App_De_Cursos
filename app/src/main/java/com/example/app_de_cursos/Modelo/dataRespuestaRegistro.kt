@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 data class dataRespuestaRegistro(
     @SerialName("exito") val exito: Boolean = false,
     @SerialName("mensaje") val mensaje: String = ""
+
 )
